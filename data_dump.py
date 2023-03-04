@@ -15,8 +15,8 @@ if __name__ == "__main__":
     df = pd.read_csv(DATA_FILE_PATH)
     print(f"Rows and Columns: {df.shape}")
 
-    df.reset_index(drop=True,inplace = True)
+    df.rest_index(drop=True,inplace = True)
 
-    json_record = list(json.loads(df.T.to_json()).values())
+    json_record = list(json.load(df.T.to_json()).values())
 
     client[DATABASE_NAME][COLLECTION_NAME].insert_many(json_record)
