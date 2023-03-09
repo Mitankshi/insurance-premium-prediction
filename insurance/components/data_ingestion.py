@@ -28,7 +28,7 @@ class DataIngestion: # data division into train , test and validate
 
             #save data in feature store
             logging.info(f"create feature store folder if not available")
-            feature_store_dir = os.path.join(self.data_ingestion_config.feature_store_file_path)
+            feature_store_dir = os.path.dirname(self.data_ingestion_config.feature_store_file_path)
             os.makedirs(feature_store_dir, exist_ok = True)
             logging.info(f"save df to feature store folder")
 
