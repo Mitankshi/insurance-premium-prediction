@@ -30,9 +30,9 @@ class DataIngestion: # data division into train , test and validate
             logging.info(f"create feature store folder if not available")
             feature_store_dir = os.path.dirname(self.data_ingestion_config.feature_store_file_path)
             os.makedirs(feature_store_dir, exist_ok = True)
-            logging.info(f"save df to feature store folder")
-
+            
             # save df to feature store folder
+            logging.info(f"save df to feature store folder")
             df.to_csv(path_or_buf = self.data_ingestion_config.feature_store_file_path, index=True, header = True)
 
             logging.info(f"splitting our dataset into train and test set")
@@ -53,6 +53,7 @@ class DataIngestion: # data division into train , test and validate
                 test_file_path = self.data_ingestion_config.test_file_path
             )
 
+            return data_ingestion_artifact
 
 
 
