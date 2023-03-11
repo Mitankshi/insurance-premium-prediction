@@ -1,4 +1,4 @@
-from insurance.entity import artifact_entity, config_entity
+from insurance.entity import artifact_entity,config_entity
 from insurance.exception import InsuranceException
 import pandas as pd
 from typing import Optional
@@ -11,12 +11,12 @@ from insurance import utils
 
 class DataValidation:
     def __init__(self,
-                 data_validation_config: config_entity.DataValidationConfig,
-                 data_ingestion_artifact: artifact_entity.DataIngestionArtifact):
+                 data_validation_config:config_entity.DataValidationConfig,
+                 data_ingestion_artifact:artifact_entity.DataIngestionArtifact):
         try:
             self.data_validation_config = data_validation_config
             self.data_ingestion_artifact = data_ingestion_artifact
-            self.validation_error = dict()
+            self.validation_error=dict()
 
         except Exception as e:
             raise InsuranceException(e,sys)
@@ -45,8 +45,8 @@ class DataValidation:
 
     def is_required_columns_exists(self, base_df:pd.DataFrame , current_df:pd.DataFrame,report_key_name: str)->bool:
         try:
-            base_columns = base_df
-            current_columns = current_df
+            base_columns = base_df.columns
+            current_columns = current_df.columns
 
             missing_columns =[]
             for base_columns in base_columns:
@@ -62,17 +62,18 @@ class DataValidation:
         except Exception as e:
             raise InsuranceException(e,sys)
 
-    def data_drift(self, base_df:pd.DataFrame , current_df:pd.DataFrame , report_key_name:str):
+    def data_drift(self,base_df:pd.DataFrame,current_df:pd.DataFrame,report_key_name:str):
         try:
-            drift_report = dict()
+            drift_report= dict()
 
             base_columns = base_df.columns
             current_columns = current_df.columns
 
             for base_column in base_columns:
-                base_data,current_data = base_df[base_column],current_df[current_columns]
+                base_data,current_data = base_df[base_column],current_df[base_column]
 
-                same_distribution=ks_2samp(base_data, current_data)
+                same_distribution=ks_2samp(base_data,current_data)
+
 
                 if same_distribution.pvalue>0.05:
                     # null hypothesis will accept
@@ -131,10 +132,9 @@ class DataValidation:
 
             # write your report
             logging.info("Write reprt in yaml file")
-            utils.write_yaml_file(file_path=self.data_validation_config.report_file_path
-                                  , data= self.validation_error)
+            utils.write_yaml_file(file_path=self.data_validation_config.report_file_path, data=self.validation_error)
             
-            data_validation_artifact= artifact_entity.DataIngestionArtifact(report_file_path = self.data_validation_config.report_file_path)
+            data_validation_artifact= artifact_entity.DataValidationArtifact(report_file_path =self.data_validation_config.report_file_path)
             logging.info(f"Data validation artifact: {data_validation_artifact}")
             return data_validation_artifact
 

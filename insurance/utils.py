@@ -27,7 +27,7 @@ def write_yaml_file(file_path, data:dict):
     try:
         file_dir = os.path.dirname(file_path)
         os.makedirs(file_dir, exist_ok=True)
-        with open(file_dir, 'w') as file_write:
+        with open(file_path, 'w') as file_write:
             yaml.dump(data, file_write)
             
     except Exception as e:
