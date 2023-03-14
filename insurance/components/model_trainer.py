@@ -17,7 +17,7 @@ from sklearn.metrics import r2_score
 
 
 class ModelTrainer:
-    def __init__(self, model_trainer_config: config_entity.ModelTrainingConfig,
+    def __init__(self, model_trainer_config: config_entity.ModelTrainerConfig,
                  data_transformation_artifact: artifact_entity.DataTransformationArtifact):
         try:
             logging.info(f"creating model training file")

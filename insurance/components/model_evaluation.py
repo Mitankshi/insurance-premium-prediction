@@ -7,10 +7,11 @@ import sys
 from sklearn.pipeline import Pipeline
 import pandas as pd
 import numpy as np
-from insurance import utils
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from insurance.predictor import ModelResolver
+from insurance.utils import load_object
+from insurance.config import TARGET_COLUMN
 
 
 class ModelEvaluation:
@@ -44,6 +45,78 @@ class ModelEvaluation:
                     f"model evaluation artifact: {model_eval_artifact}")
                 logging.info(f"completed evaluation")
                 return model_eval_artifact
+
+            # find location of previous model
+
+            logging.info(f"finding previous model")
+            transformer_path = self.model_resolver.get_latest_transformer_path()
+            model_path = self.model_resolver.get_latest_model_path()
+            target_encoder_path = self.model_resolver.get_latest_target_encoder_path()
+
+            logging.info(f"calling load object")
+            transformer = load_object(file_path=transformer_path)
+            model = load_object(file_path=model_path)
+            target_encoder = load_object(file_path=target_encoder_path)
+
+            # current model
+
+            logging.info(f"defining for new model")
+            current_transformer = load_object(
+                file_path=self.data_transformation_artifact.transform_object_path)
+            current_model = load_object(
+                file_path=self.model_trainer_artifact.model_path)
+            current_target_encoder = load_object(
+                file_path=self.data_transformation_artifact.target_encoder_path)
+
+            logging.info(f"reading the data")
+            test_Df = pd.read_csv(self.data_ingestion_artifact.test_file_path)
+
+            logging.info(f"removing the atrget column as dependent column")
+            target_df = test_Df[TARGET_COLUMN]
+            y_true = target_df
+
+            logging.info(f"defining feature")
+            input_features_name = list(transformer.feature_name_in_)
+
+            logging.info(f"for loop running")
+            for i in input_features_name:
+                if test_Df[i].dtypes == 'O':
+                    test_Df[i] = target_encoder.fit_transform(test_Df[i])
+
+            logging.info(f"transforming input data")
+            input_arr = transformer.transform(test_Df[input_features_name])
+
+            logging.info(f"prediction of data")
+            y_pred = model.predict(input_arr)
+
+            # comparison b/w models
+            logging.info(f"checking accuracy")
+            previous_model_score = r2_score(y_true=y_true, y_pred=y_pred)
+
+            # accuracy for current model
+            logging.info(f"input data")
+            input_feature_name = list(current_transformer.feature_names_in_)
+            input_arr = current_transformer.transform(
+                test_Df[input_feature_name])
+
+            logging.info(f"prediction of current data")
+            y_pred = current_model.predict(input_arr)
+            y_true = target_df
+
+            logging.info(f"checkign score for new model")
+            current_model_score = r2_score(y_true=y_true, y_pred=y_pred)
+
+            logging.info(f"comparision of models")
+            if current_model_score <= previous_model_score:
+                logging.info(
+                    f"current trained model is not bettr than previous model")
+                raise Exception(
+                    f"current model is not better than previous model")
+
+            model_eval_artifact = artifact_entity.ModelEvaluationArtifact(
+                is_model_accepted=True, improved_accuracy=current_model_score-previous_model_score)
+
+            return model_eval_artifact
 
         except Exception as e:
             raise InsuranceException(e, sys)

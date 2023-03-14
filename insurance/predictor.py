@@ -80,12 +80,13 @@ class ModelResolver:
             logging.info(f"latest directory saving")
             latest_dir = self.get_latest_dir_path()
             logging.info(f"writing function for saving path")
-            if latest_dir is None:
+            if latest_dir == None:
+                logging.info(f"inside if condition")
                 return os.path.join(self.model_registry, f"{0}")
 
             logging.info(f"checking latest directory")
             latest_dir_num = int(os.path.basename(self.get_latest_dir_path()))
-            return os.path.join(self.model_registry, f"{latest_dir_num}")
+            return os.path.join(self.model_registry, f"{latest_dir_num+1}")
 
         except Exception as e:
             raise e
@@ -113,6 +114,8 @@ class ModelResolver:
             logging.info(f"saving encoder data")
             latest_dir = Self.get_latest_save_dir_path()
             # pkl
-            return os.path.join(latest_dir, Self.get_latest_save_encoder_path, TARGET_ENCODER_OBJECT_FILE_NAME)
+
+            logging.info(f"after return")
+            return os.path.join(latest_dir, Self.target_encoder_dir_name, TARGET_ENCODER_OBJECT_FILE_NAME)
         except Exception as e:
             raise e
