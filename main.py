@@ -9,6 +9,7 @@ from insurance.entity import config_entity
 from insurance.components.data_ingestion import DataIngestion
 from insurance.components.data_validation import DataValidation
 from insurance.components.model_trainer import ModelTrainer
+from insurance.components.model_evaluation import ModelEvaluation
 
 # def test_logger_and_exception():
 # try:
@@ -57,5 +58,14 @@ if __name__ == "__main__":
                                      data_transformation_artifact=data_transformation_artifact)
         model_trainer_artifact = model_trainer.initiate_model_trainer()
 
+        # model evaluation
+
+        model_evaluation_config = config_entity.ModelEvaluationConfig(
+            training_pipeline_config=training_pipeline_config)
+        modle_eval = ModelEvaluation(model_evaluation_config=model_evaluation_config,
+                                     data_ingestion_artifact=data_ingestion_artifact,
+                                     data_transformation_artifact=data_transformation_artifact,
+                                     model_trainer_artifact=model_trainer_artifact)
+        model_eval_artifact = modle_eval.initiate_model_evaluation()
     except Exception as e:
         print(e)

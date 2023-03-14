@@ -26,7 +26,24 @@ class ModelEvaluation:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_transformation_artifact = data_transformation_artifact
             self.model_trainer_artifact = model_trainer_artifact
-            self.ModelResolver = ModelResolver()
+            self.model_resolver = ModelResolver()
+
+        except Exception as e:
+            raise InsuranceException(e, sys)
+
+    def initiate_model_evaluation(self) -> artifact_entity.ModelEvaluationArtifact:
+        try:
+            logging.info(f"getting latest directory")
+            latest_dir_path = self.model_resolver.get_latest_dir_path()
+
+            logging.info(f"writting function")
+            if latest_dir_path == None:
+                model_eval_artifact = artifact_entity.ModelEvaluationArtifact(
+                    is_model_accepted=True, improved_accuracy=None)
+                logging.info(
+                    f"model evaluation artifact: {model_eval_artifact}")
+                logging.info(f"completed evaluation")
+                return model_eval_artifact
 
         except Exception as e:
             raise InsuranceException(e, sys)

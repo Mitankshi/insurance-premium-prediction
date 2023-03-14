@@ -1,6 +1,6 @@
 import os
 from insurance.logger import logging
-import Optional
+from typing import Optional
 from insurance.entity.config_entity import TARGET_ENCODER_OBJECT_FILE_NAME, TRANSFORMER_OBJECT_FILE_NAME, MODEL_FILE_NAME
 
 
