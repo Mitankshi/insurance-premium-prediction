@@ -10,7 +10,7 @@ from insurance.entity.config_entity import TARGET_ENCODER_OBJECT_FILE_NAME, TRAN
 
 
 class ModelResolver:
-    def __init__(self, model_registry: str = "saved_model",
+    def __init__(self, model_registry: str = "saved_models",
                  transformer_dir_name="transformer",
                  target_encoder_dir_name="target_encoder",
                  model_dir_name="model"):
@@ -70,7 +70,7 @@ class ModelResolver:
             logging.info(f"writing function for encoder path")
             if latest_dir is None:
                 raise Exception(f"target encoder data is not available")
-            return os.path.join(latest_dir, self.get_latest_target_encoder_path, TARGET_ENCODER_OBJECT_FILE_NAME)
+            return os.path.join(latest_dir, self.target_encoder_dir_name, TARGET_ENCODER_OBJECT_FILE_NAME)
 
         except Exception as e:
             raise e

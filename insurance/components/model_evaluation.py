@@ -76,15 +76,15 @@ class ModelEvaluation:
             y_true = target_df
 
             logging.info(f"defining feature")
-            input_features_name = list(transformer.feature_name_in_)
+            input_feature_name = list(transformer.feature_names_in_)
 
             logging.info(f"for loop running")
-            for i in input_features_name:
+            for i in input_feature_name:
                 if test_Df[i].dtypes == 'O':
                     test_Df[i] = target_encoder.fit_transform(test_Df[i])
 
             logging.info(f"transforming input data")
-            input_arr = transformer.transform(test_Df[input_features_name])
+            input_arr = transformer.transform(test_Df[input_feature_name])
 
             logging.info(f"prediction of data")
             y_pred = model.predict(input_arr)
