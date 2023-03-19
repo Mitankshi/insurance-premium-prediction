@@ -15,7 +15,7 @@ transformer = pickle.load(open('transformer.pkl', 'rb'))
 
 st.title("Insurance Premium Prediction")
 
-Gender = st.selectbox("Please select your gender", ('male', 'female'))
+sex = st.selectbox("Please select your sex", ('male', 'female'))
 
 age = st.text_input("Enter your age", 23)
 age = int(age)
@@ -34,7 +34,7 @@ region = st.selectbox("Please select your region", {
 
 l = {}
 l['age'] = age
-l['Gender'] = Gender
+l['sex'] = sex
 l['bmi'] = bmi
 l['children'] = children
 l['smoker'] = smoker
@@ -43,7 +43,7 @@ l['region'] = region
 df = pd.DataFrame(l, index=[0])
 
 df['region'] = encoder.transform(df['region'])
-df['Gender'] = df['Gender'].map({'male': 1, 'female': 0})
+df['sex'] = df['sex'].map({'male': 1, 'female': 0})
 df['smoker'] = df['smoker'].map({'yes': 1, 'no': 0})
 
 print(df)
@@ -52,5 +52,5 @@ df = transformer.transform(df)
 
 y_pred = model.predict(df)
 
-if st.button("Show Results"):
-    st.header(f"round{y_pred[0], 2} INR")
+if st.button("Submit"):
+    st.header(f"{round(y_pred[0], 2)} INR")
