@@ -1,10 +1,10 @@
 import streamlit as st
 # import preprocessor,helper
-
+import matplotlib.pyplot as plt
 
 import numpy as np
 import pandas as pd
-
+import seaborn as sns
 import pickle
 import xgboost as xg
 from sklearn.preprocessing import StandardScaler
