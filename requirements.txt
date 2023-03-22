@@ -19,4 +19,5 @@ numpy
 scikit-learn==1.0.2
 apache-airflow
 wheel
+protobuf==3.19.0
 -e .
