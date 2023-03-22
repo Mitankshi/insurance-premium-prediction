@@ -47,8 +47,6 @@ df['region'] = encoder.transform(df['region'])
 df['sex'] = df['sex'].map({'male': 1, 'female': 0})
 df['smoker'] = df['smoker'].map({'yes': 1, 'no': 0})
 
-print(df)
-
 df = transformer.transform(df)
 
 y_pred = model.predict(df)
