@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import pickle
-import xgboost as xg
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 
