@@ -16,7 +16,7 @@ xgboost==1.6.2
 pandas
 PyYAML
 numpy
-scikit-learn==1.1
+scikit-learn==1.0.2
 apache-airflow
 wheel
 protobuf==3.19.0
